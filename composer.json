@@ -1,0 +1,13 @@
+{
+    "name": "kriss/test",
+    "type": "project",
+    "require": {
+        "paquettg/php-html-parser": "^1.7"
+    },
+    "authors": [
+        {
+            "name": "kandrejevs",
+            "email": "krissa@scandiweb.com"
+        }
+    ]
+}
