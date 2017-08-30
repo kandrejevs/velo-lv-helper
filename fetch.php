@@ -103,6 +103,7 @@ usort($riders, function($a, $b) {
 
 ?>
 <?php $i = 1; ?>
+<?php $passage = 1; ?>
 <table>
     <thead>
     <tr>
@@ -116,7 +117,49 @@ usort($riders, function($a, $b) {
     <tbody>
     <?php foreach ($riders as $key => $rider): ?>
         <tr>
-            <td><?php echo $i++ ?></td>
+            <td><?php echo $i ?></td>
+            <td>
+                <?php echo $passage; ?>
+                <?php
+                if ($i == 50) {
+                    $passage++;
+                }
+
+                if ($i == 100) {
+                    $passage++;
+                }
+
+                if ($i==200) {
+                    $passage++;
+                }
+                if ($i==300) {
+                    $passage++;
+                }
+                if ($i==500) {
+                    $passage++;
+                }
+                if ($i==700) {
+                    $passage++;
+                }
+                if ($i==900) {
+                    $passage++;
+                }
+                if ($i==1100) {
+                    $passage++;
+                }
+                if ($i==1300) {
+                    $passage++;
+                }
+                if ($i==1500) {
+                    $passage++;
+                }
+                if ($i==1700) {
+                    $passage++;
+                }
+                $i++;
+
+                    ?>
+            </td>
             <td><?php echo $rider['number'] ?></td>
             <td><?php echo $rider['name'] ?></td>
             <td>
