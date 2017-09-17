@@ -3,10 +3,10 @@
 require "vendor/autoload.php";
 use PHPHtmlParser\Dom;
 $riders = [];
-$stage = 6;
+$stage = 7;
 
 //fetch riders from velo.lv
-for ($i = 1; $i <= 17; $i++) {
+for ($i = 1; $i <= 20; $i++) {
     $dom = new Dom;
     $dom->loadFromUrl("https://velo.lv/lv/sacensibas/67/kopvertejums/?search=&distance=61&group=&gender=&page=$i");
 
@@ -24,6 +24,9 @@ for ($i = 1; $i <= 17; $i++) {
     }
 }
 
+//X best stages
+
+
 //calculate average points
 foreach ($riders as &$rider) {
     $rider['skipped'] = 0;
@@ -35,51 +38,30 @@ foreach ($riders as &$rider) {
         }
     }
 
-    if ($rider['skipped'] == 0) {
-        $rider['average'] = array_sum($rider['results']) / $stage;
+    if (count($rider['results']) == $stage) {
+        $rider['average'] = array_sum($rider['results']) / count($rider['results']);
     }
 
-
-    if ($rider['skipped'] == 1) {
-        $rider['results'][] = (array_sum($rider['results']) / ($stage - 1)) / 1.15;
-        $rider['average'] = array_sum($rider['results']) / $stage;
+    if (count($rider['results']) == ($stage - 1)) {
+        $rider['results'][] = (array_sum($rider['results']) / (count($rider['results']))) / 1.15;
+        $rider['average'] = array_sum($rider['results']) / count($rider['results']);
     }
 
-    if ($rider['skipped'] == 2) {
-        $average = array_sum($rider['results']) / ($stage - 2);
-        $rider['results'][] = $average / 1.15;
-        $rider['results'][] = $average / 1.25;
-        $rider['average'] = array_sum($rider['results']) / $stage;
+    if (count($rider['results']) == ($stage - 2)) {
+        $rider['results'][] = (array_sum($rider['results']) / (count($rider['results']))) / 1.25;
+        $rider['average'] = array_sum($rider['results']) / (count($rider['results']));
     }
 
-    if ($rider['skipped'] == 3) {
-        $average = array_sum($rider['results']) / ($stage - 3);
-        $rider['results'][] = $average / 1.15;
-        $rider['results'][] = $average / 1.25;
-        $rider['results'][] = 0;
-        $rider['average'] = array_sum($rider['results']) / $stage;
+    if (count($rider['results']) >= 1 && count($rider['results']) < ($stage - 2)) {
+        $rider['results'][] = (array_sum($rider['results']) / count($rider['results'])) / 1.25;
+        while (count($rider['results']) < $stage) {//because 2 stages have 1 combined artificial result
+            $rider['results'][] = 0;
+        }
+
+        $rider['average'] = array_sum($rider['results']) / (count($rider['results']));
     }
 
-    if ($rider['skipped'] == 4) {
-        $average = array_sum($rider['results']) / ($stage - 4);
-        $rider['results'][] = $average / 1.15;
-        $rider['results'][] = $average / 1.25;
-        $rider['results'][] = 0;
-        $rider['results'][] = 0;
-        $rider['average'] = array_sum($rider['results']) / $stage;
-    }
-
-    if ($rider['skipped'] == 5) {
-        $average = array_sum($rider['results']) / ($stage - 5);
-        $rider['results'][] = $average / 1.15;
-        $rider['results'][] = $average / 1.25;
-        $rider['results'][] = 0;
-        $rider['results'][] = 0;
-        $rider['results'][] = 0;
-        $rider['average'] = array_sum($rider['results']) / $stage;
-    }
-
-    if ($rider['skipped'] == 6) {
+    if (count($rider['results']) == 0) {
         $rider['average'] = 0;
     }
 }
@@ -163,7 +145,6 @@ usort($riders, function($a, $b) {
             <td><?php echo $rider['number'] ?></td>
             <td><?php echo $rider['name'] ?></td>
             <td>
-<!--                --><?php //echo $rider['sum'] ?>
                 <?php echo number_format($rider['average'], 1) ?>
             </td>
             <td><?php echo $rider['skipped'] ?></td>
